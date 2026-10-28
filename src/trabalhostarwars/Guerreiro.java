@@ -1,13 +1,19 @@
 package trabalhostarwars;
-
+import java.util.ArrayList;
 public abstract class Guerreiro {
     private String nome;
     private int idade;
     private double peso;
     private double energia;
+    private boolean envenenado = false;
     
     //construtor
-    public Guerreiro(String nome, int idade, double peso){
+    public Guerreiro(String nome, int idade, double peso) {
+        this(nome, idade, peso, 100);
+    }
+
+
+    public Guerreiro(String nome, int idade, double peso, double energia){
         this.nome = nome;
         this.idade = idade;
         this.peso = peso;
@@ -46,15 +52,30 @@ public abstract class Guerreiro {
         }
     }
     
+    public void envenenar(){
+        this.envenenado = true;
+    }
+    
+    public boolean estaEnvenenado(){
+        return this.envenenado;
+    }
+    
+    public void aplicarDanoVeneno(){
+        if (this.envenenado){
+            this.receberDano(5);
+        }
+    }
+    
     public abstract double getDanoDeAtaque();
     
     //Metodo de ataque que vai receber o guerreiro alvo que vai sofrer ataque
-    public void atacar(Guerreiro alvo){
-        if(this.estaDerrotado() == true){ //this é quem ataca, to vendo se ele esta derrotado
+
+    public void atacar(ArrayList<Guerreiro> filaAdversaria, ArrayList<Guerreiro> filaAliada) {
+        if (this.estaDerrotado() || filaAdversaria.isEmpty()) {
             return;
         }
-        else{
-            alvo.receberDano(this.getDanoDeAtaque()); //alvo é quem recebe o dano do this
-        }
+
+        Guerreiro alvo = filaAdversaria.get(0);
+        alvo.receberDano(this.getDanoDeAtaque());
     }
 }

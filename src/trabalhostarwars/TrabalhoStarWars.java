@@ -9,7 +9,7 @@ public class TrabalhoStarWars {
         Guerreiro Judi = new JediMestre("Judi", 75, 50.62);
         Guerreiro Mupe = new CloneMedico("Mupe", 46, 62);
         Guerreiro Puti = new CloneMedico("Puti", 12, 43.0);
-        
+           
         //cria os dois lados com quatro filas cada
         ArrayList<ArrayList<Guerreiro>> lado1 = criarLadoArena();
         ArrayList<ArrayList<Guerreiro>> lado2 = criarLadoArena();
