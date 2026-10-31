@@ -17,7 +17,7 @@ public abstract class Guerreiro {
         this.nome = nome;
         this.idade = idade;
         this.peso = peso;
-        this.energia = 100;
+        this.energia = energia;
     }
     
     //metodos com retorno, permite consultar nome, idade, peso e energia
@@ -39,7 +39,18 @@ public abstract class Guerreiro {
     
     //metodo de receber dano
     public void receberDano(double dano){ //parametro indica qtd dano que será descontado
+        if(dano <= 0){
+            return;
+        }
         this.energia = (this.energia - dano);
+    }
+    
+    //metodo de recuperar energia, onde receber a do objeto e acrescenta mais a quantidade
+    public void recuperarEnergia(double qtdEnergiaRecuperar){
+        if(this.estaDerrotado() || qtdEnergiaRecuperar <= 0){
+            return;
+        }
+        this.energia = (this.energia + qtdEnergiaRecuperar);
     }
     
     //metodo de esta derrotado
@@ -76,6 +87,16 @@ public abstract class Guerreiro {
         }
 
         Guerreiro alvo = filaAdversaria.get(0);
+        if(alvo.estaDerrotado()){
+            return;
+        }
         alvo.receberDano(this.getDanoDeAtaque());
+        this.aplicarDanoVeneno();
+    }
+    
+    //APRESENTAR DADOS DOS GUERREIROS
+    @Override
+    public String toString(){
+        return(nome + ", " + idade + " anos, " + peso + " quilos");
     }
 }

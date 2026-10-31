@@ -20,7 +20,16 @@ public class TrabalhoStarWars {
         lado1.get(2).add(Mupe);
         lado1.get(0).add(Puti);
 
+        //MOSTRAR OS DOIS LADOS DA ARENA
+        System.out.println("LADO 1 - Jedi e Clones");
         exibirLadoArena(lado1);
+        System.out.println("LADO 2 - Sith e Droides");
+        exibirLadoArena(lado2);
+        
+        //MOSTRAR O MAIOR PESO DOS LADOS
+        System.out.println("B)");
+        System.out.println("Jedi e Clones pesam " + somarPesosDoLado(lado1) + " quilos.");
+        System.out.println("Sith e Droides pesam " + somarPesosDoLado(lado2) + " quilos.");
     }
     
     //metodo estatico pq é da classe
@@ -68,16 +77,17 @@ public class TrabalhoStarWars {
     //metodo estatico pq é da classe
     //percorre as filas e mostra seus guerreiros (qykaquer lado)
     //i = fila ; j = guerreiro na fila
+    //A) EXIBA OS DADOS DE AMBOS OS LADOS
     public static void exibirLadoArena(ArrayList<ArrayList<Guerreiro>> lado){
         for (int i = 0; i < lado.size(); i++) {
-            System.out.println(lado.get(i).size());
+            System.out.println("Fila " + (i + 1) + ":"); 
             if(lado.get(i).isEmpty()){
-                System.out.println("Imprimindo da lista " + i + ": Vazia");
+                System.out.println("  Vazia");
             }
             else{
                 for(int j = 0; j < lado.get(i).size(); j++){ //laco que percorrer a fila completa
                     Guerreiro temp = lado.get(i).get(j); //acessa a lista do indice e imprime o guerreiro da posicao j
-                    System.out.println("Imprimindo da lista " + i + ": " + temp.getNome());
+                    System.out.println("  " + temp.toString());
                 }
             }
         }
@@ -90,5 +100,18 @@ public class TrabalhoStarWars {
             }
         }
         return(true); 
+    }
+    
+    //B)A SOMA DOS PESOS DE AMBOS OS LADOS
+    public static double somarPesosDoLado(ArrayList<ArrayList<Guerreiro>> lado){
+        double soma = 0;
+        
+        for(int i = 0; i < lado.size(); i++){
+            for(int j = 0; j < lado.get(i).size(); j++){
+                Guerreiro temp = lado.get(i).get(j);
+                soma = soma + temp.getPeso();
+            }
+        }
+        return(soma);
     }
 }
