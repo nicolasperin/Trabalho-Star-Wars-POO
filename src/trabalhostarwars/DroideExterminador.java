@@ -28,6 +28,7 @@ public class DroideExterminador extends Guerreiro {
         }
 
         Guerreiro alvo = filaAdversaria.get(0);
-        alvo.receberDano(alvo.getEnergia()); //ele executa
+        alvo.receberDano(alvo.getEnergia()); //ele executa o inimigo
+        this.aplicarDanoVeneno();
     }
 }

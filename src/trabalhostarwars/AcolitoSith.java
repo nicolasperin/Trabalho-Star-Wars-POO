@@ -20,7 +20,7 @@ public class AcolitoSith extends Guerreiro {
     public double getDanoDeAtaque() {
         return 15;
     }
-    
+
     @Override
     public void atacar(ArrayList<Guerreiro> filaAdversaria, ArrayList<Guerreiro> filaAliada) {
         if (this.estaDerrotado() || filaAdversaria.isEmpty()) {
@@ -28,15 +28,23 @@ public class AcolitoSith extends Guerreiro {
         }
         Guerreiro alvo1 = filaAdversaria.get(0);
         alvo1.receberDano(this.getDanoDeAtaque());
+        this.aplicarDanoVeneno();
+        Combate.processarDerrotados(filaAdversaria);
+
+        if (this.estaDerrotado()) {
+            return;
+        }
 
         filaAliada.remove(this);
         filaAliada.add(this);
-        
-        if(!filaAdversaria.get(filaAdversaria.size() - 1).estaDerrotado()){
-            Guerreiro alvo2 = filaAdversaria.get(filaAdversaria.size() - 1);
-            alvo2.receberDano(this.getDanoDeAtaque());            
+        if (!filaAdversaria.isEmpty()) {
+            if (!filaAdversaria.get(filaAdversaria.size() - 1).estaDerrotado()) {
+                Guerreiro alvo2 = filaAdversaria.get(filaAdversaria.size() - 1);
+                alvo2.receberDano(this.getDanoDeAtaque());
+                this.aplicarDanoVeneno();
+            }
         }
-       
+
     }
-    
+
 }
