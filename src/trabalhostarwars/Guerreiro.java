@@ -6,6 +6,11 @@ public abstract class Guerreiro {
     private double peso;
     private double energia;
     private boolean envenenado = false;
+    private Guerreiro ultimoAtacante = null;
+
+public Guerreiro getUltimoAtacante(){
+    return(ultimoAtacante);
+}
     
     //construtor
     public Guerreiro(String nome, int idade, double peso) {

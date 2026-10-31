@@ -18,6 +18,8 @@ public class Combate {
     private ArrayList<Guerreiro> guerreirosQueJaSeMoveram = new ArrayList<>();
     private Guerreiro ultimoDerrotado = null;
     private Guerreiro autorUltimoAtaque = null;
+    private Guerreiro alvoForcado = null;
+    private ArrayList<ArrayList<Guerreiro>> filasBloqueadas = new ArrayList<>();
 
     Random random = new Random();
 
@@ -26,6 +28,7 @@ public class Combate {
         this.lado2 = lado2;
     }
 
+    
     public int sortear() {
         return random.nextInt(2) + 1;
     }
@@ -46,6 +49,26 @@ public class Combate {
         }
 
         return guerreirosDoInicioDeCadaFila;
+    }
+
+    //se o lado adversario ativou o Clone Pesado, ele é o alvo; senão usa a fila mais próxima
+    private ArrayList<Guerreiro> escolherFilaAlvo(int indiceFilaAtacante, ArrayList<ArrayList<Guerreiro>> ladoAdversario, boolean ladoAtacaPrimeiro) {
+
+        if (!ladoAtacaPrimeiro && alvoForcado != null && !alvoForcado.estaDerrotado()) {
+            for (int i = 0; i < ladoAdversario.size(); i++) {
+                if (ladoAdversario.get(i).contains(alvoForcado)) {
+                    return ladoAdversario.get(i);
+                }
+            }
+        }
+
+        int indiceDaFilaMaisProxima = retornarIndiceDaPrimeiraFilaEncontrada(indiceFilaAtacante, ladoAdversario);
+
+        if (indiceDaFilaMaisProxima == -1) {
+            return null;
+        }
+
+        return ladoAdversario.get(indiceDaFilaMaisProxima);
     }
 
     public void rotacionarGuerreirosDaRodada(ArrayList<ArrayList<Guerreiro>> lado, ArrayList<Guerreiro> guerreirosDaFrente) {
@@ -103,59 +126,72 @@ public class Combate {
         }
     }
 
-    public void executarAtaques(ArrayList<ArrayList<Guerreiro>> ladoAtacante, ArrayList<ArrayList<Guerreiro>> ladoAdversario) {
+    public void executarAtaques(ArrayList<ArrayList<Guerreiro>> ladoAtacante, ArrayList<ArrayList<Guerreiro>> ladoAdversario, boolean ladoAtacaPrimeiro) {
         for (int i = 0; i < 4; i++) {
 
             ArrayList<Guerreiro> filaAtacanteAtual = ladoAtacante.get(i);
 
-            if (!filaAtacanteAtual.isEmpty()) {
+            //fila vazia ou fila empurrada pelo Jedi Mestre nao ataca nessa rodada
+            if (filaAtacanteAtual.isEmpty() || filasBloqueadas.contains(filaAtacanteAtual)) {
+                continue;
+            }
 
-                Guerreiro guerreiroAtual = filaAtacanteAtual.get(0);
+            Guerreiro guerreiroAtual = filaAtacanteAtual.get(0);
 
-                int indiceDaFilaMaisProxima = retornarIndiceDaPrimeiraFilaEncontrada(i, ladoAdversario);
+            ArrayList<Guerreiro> proximaFila = escolherFilaAlvo(i, ladoAdversario, ladoAtacaPrimeiro);
 
-                if (indiceDaFilaMaisProxima != -1) {
-                    ArrayList<Guerreiro> proximaFila = ladoAdversario.get(indiceDaFilaMaisProxima);
+            if (proximaFila == null) {
+                return;
+            }
 
-                    if (!guerreiroAtual.estaDerrotado()) {
+            Guerreiro alvoDoAtaque = proximaFila.get(0); //guardo o alvo antes do ataque (usado pelo Jedi Mestre)
 
-                        guerreiroAtual.atacar(proximaFila, filaAtacanteAtual);
-                        processarDerrotados(filaAtacanteAtual); //atacantes podem morrer pro efeito do veneno
+            if (!guerreiroAtual.estaDerrotado()) {
 
-                        if (guerreiroAtual instanceof AcolitoSith) {
-                            guerreirosQueJaSeMoveram.add(guerreiroAtual);
-                        }
+                guerreiroAtual.atacar(proximaFila, filaAtacanteAtual);
+                processarDerrotados(filaAtacanteAtual); //atacantes podem morrer pro efeito do veneno
 
-                    }
+                if (guerreiroAtual instanceof AcolitoSith) {
+                    guerreirosQueJaSeMoveram.add(guerreiroAtual);
+                }
+            }
 
-                    processarDerrotados(proximaFila);
+            processarDerrotados(proximaFila);
 
-                } else {
+            //habilidades que so valem para quem ataca primeiro
+            if (ladoAtacaPrimeiro && !guerreiroAtual.estaDerrotado()) {
 
-                    return;
+                if (guerreiroAtual instanceof ClonePesado) {
+                    alvoForcado = guerreiroAtual; //o ultimo a ativar sobrescreve o anterior
+                }
+
+                if (guerreiroAtual instanceof JediMestre && !alvoDoAtaque.estaDerrotado()) {
+                    proximaFila.remove(alvoDoAtaque);
+                    proximaFila.add(alvoDoAtaque); //empurra o alvo pro final da fila
+                    filasBloqueadas.add(proximaFila); //a fila nao ataca nessa rodada
                 }
             }
         }
-
     }
 
     public void executarRodada() {
         ArrayList<Guerreiro> frenteLado1 = obterGuerreirosDaFrente(lado1);
         ArrayList<Guerreiro> frenteLado2 = obterGuerreirosDaFrente(lado2);
         guerreirosQueJaSeMoveram.clear();
+        filasBloqueadas.clear();
+        alvoForcado = null;
         int sorteio = this.sortear();
 
         if (sorteio == 1) {
-            executarAtaques(this.lado1, this.lado2);
-            executarAtaques(this.lado2, this.lado1);
+            executarAtaques(this.lado1, this.lado2, true);
+            executarAtaques(this.lado2, this.lado1, false);
         } else {
-            executarAtaques(this.lado2, this.lado1);
-            executarAtaques(this.lado1, this.lado2);
+            executarAtaques(this.lado2, this.lado1, true);
+            executarAtaques(this.lado1, this.lado2, false);
         }
 
         rotacionarGuerreirosDaRodada(this.lado1, frenteLado1);
         rotacionarGuerreirosDaRodada(this.lado2, frenteLado2);
-
     }
 
 }
