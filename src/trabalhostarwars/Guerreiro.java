@@ -17,7 +17,7 @@ public abstract class Guerreiro {
         this.nome = nome;
         this.idade = idade;
         this.peso = peso;
-        this.energia = 100;
+        this.energia = energia;
     }
     
     //metodos com retorno, permite consultar nome, idade, peso e energia
@@ -77,5 +77,6 @@ public abstract class Guerreiro {
 
         Guerreiro alvo = filaAdversaria.get(0);
         alvo.receberDano(this.getDanoDeAtaque());
+        this.aplicarDanoVeneno();
     }
 }
