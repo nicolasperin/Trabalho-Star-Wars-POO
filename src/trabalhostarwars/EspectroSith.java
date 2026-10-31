@@ -30,7 +30,7 @@ public class EspectroSith extends Guerreiro{
 
         Guerreiro alvo = filaAdversaria.get(0);
         alvo.receberDano(this.getDanoDeAtaque());
-
+        this.aplicarDanoVeneno();
 
     }
     

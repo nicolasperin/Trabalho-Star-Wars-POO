@@ -31,6 +31,6 @@ public class DroideAranha extends Guerreiro{
             Guerreiro alvo = filaAdversaria.get(i);
             alvo.receberDano(this.getDanoDeAtaque());     
         }
-
+        this.aplicarDanoVeneno();
     }
 }

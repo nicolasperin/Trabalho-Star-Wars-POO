@@ -25,6 +25,7 @@ public class AssassinoSith extends Guerreiro {
         Guerreiro alvo = filaAdversaria.get(0);
         alvo.receberDano(this.getDanoDeAtaque());
         alvo.envenenar();
+        this.aplicarDanoVeneno();
     }
     
 }
