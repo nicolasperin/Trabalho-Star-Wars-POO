@@ -147,17 +147,25 @@ public class Combate {
             Guerreiro alvoDoAtaque = proximaFila.get(0); //guardo o alvo antes do ataque (usado pelo Jedi Mestre)
 
             if (!guerreiroAtual.estaDerrotado()) {
-
-                guerreiroAtual.atacar(proximaFila, filaAtacanteAtual);
+                
+                if(guerreiroAtual instanceof JediConsular consular){
+                    consular.atacarEmArea(ladoAdversario, i);
+                    
+                    for(ArrayList<Guerreiro> fila : ladoAdversario){
+                        processarDerrotados(fila);
+                    }
+                }
+                else{
+                    guerreiroAtual.atacar(proximaFila, filaAtacanteAtual);
+                    processarDerrotados(proximaFila);
+                }
                 processarDerrotados(filaAtacanteAtual); //atacantes podem morrer pro efeito do veneno
 
                 if (guerreiroAtual instanceof AcolitoSith) {
                     guerreirosQueJaSeMoveram.add(guerreiroAtual);
                 }
             }
-
-            processarDerrotados(proximaFila);
-
+            
             //habilidades que so valem para quem ataca primeiro
             if (ladoAtacaPrimeiro && !guerreiroAtual.estaDerrotado()) {
 
