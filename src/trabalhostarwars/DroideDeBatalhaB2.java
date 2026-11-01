@@ -52,7 +52,7 @@ public class DroideDeBatalhaB2 extends Guerreiro {
 
     @Override
     public String getTipo() {
-        return ("Droide de Batalha B2");
+        return ("Droide de Batalha");
     }
     
     

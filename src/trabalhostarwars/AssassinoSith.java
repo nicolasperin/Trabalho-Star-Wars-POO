@@ -17,6 +17,7 @@ public class AssassinoSith extends Guerreiro {
         return 20;
     }
     
+    @Override
     public void atacar(ArrayList<Guerreiro> filaAdversaria, ArrayList<Guerreiro> filaAliada) {
         if (this.estaDerrotado() || filaAdversaria.isEmpty()) {
             return;

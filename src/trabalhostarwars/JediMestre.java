@@ -1,5 +1,4 @@
 package trabalhostarwars;
-import java.util.ArrayList;
 /**
  * @author PauloLagasse
  */
@@ -22,36 +21,6 @@ public class JediMestre extends Guerreiro{
         super.recuperarEnergia(qtdRecuperar);
     }
     
-    //private pois sera suado dentro por Jadi Mestre
-    //Passar o Alvo e a fila adversaria
-    private void empurrarAlvo(Guerreiro alvo, ArrayList<Guerreiro> filaAdversaria){
-        if(alvo.estaDerrotado()){
-            return;
-        }
-        
-        //emburrar alvo pro final da fila
-        boolean removido = filaAdversaria.remove(alvo);
-        if(removido){
-            filaAdversaria.add(alvo);
-        }
-    }
-    
-    public void atacar(ArrayList<Guerreiro> filaAdversaria, ArrayList<Guerreiro> filaAliada, boolean podeEmpurrar){
-        if(this.estaDerrotado() || filaAdversaria.isEmpty()){
-            return;
-        }
-        
-        Guerreiro alvo = filaAdversaria.get(0);
-        if(alvo.estaDerrotado()){
-            return;
-        }
-        //aplica o atacar do super
-        super.atacar(filaAdversaria, filaAliada);
-        
-        if(podeEmpurrar){
-            empurrarAlvo(alvo, filaAdversaria);
-        }
-    }
 
     @Override
     public String getTipo() {

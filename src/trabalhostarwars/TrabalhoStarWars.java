@@ -130,87 +130,59 @@ public class TrabalhoStarWars {
         return (g.getTipo() + " " + g.getNome() + ", de " + g.getIdade() + " anos e " + Guerreiro.formatarPeso(g.getPeso()) + " kilos");
     }
 
-   public static void main(String[] args) {
+    public static void main(String[] args) {
 
-    ArrayList<ArrayList<Guerreiro>> lado1 = lerLado(1);
-    ArrayList<ArrayList<Guerreiro>> lado2 = lerLado(2);
+        ArrayList<ArrayList<Guerreiro>> lado1 = lerLado(1);
+        ArrayList<ArrayList<Guerreiro>> lado2 = lerLado(2);
 
-    //a, b e c usam o estado inicial, entao vem antes do combate
-    System.out.println("a)");
-    System.out.println("LADO 1:");
-    exibirLadoArena(lado1);
-    System.out.println("LADO 2:");
-    exibirLadoArena(lado2);
+        //a, b e c usam o estado inicial, entao vem antes do combate
+        System.out.println("a)");
+        System.out.println("LADO 1:");
+        exibirLadoArena(lado1);
+        System.out.println("LADO 2:");
+        exibirLadoArena(lado2);
 
-    System.out.println("b)");
-    System.out.println("Jedi e Clones pesam " + Guerreiro.formatarPeso(somarPesosDoLado(lado1)) + " kilos");
-    System.out.println("Sith e Droides pesam " + Guerreiro.formatarPeso(somarPesosDoLado(lado2)) + " kilos");
+        System.out.println("b)");
+        System.out.println("Jedi e Clones pesam " + Guerreiro.formatarPeso(somarPesosDoLado(lado1)) + " kilos");
+        System.out.println("Sith e Droides pesam " + Guerreiro.formatarPeso(somarPesosDoLado(lado2)) + " kilos");
 
-    System.out.println("c)");
-    Guerreiro maisVelho = encontrarMaisVelho(lado1, lado2);
-    if (maisVelho != null) {
-        System.out.println("O " + maisVelho.getTipo() + " " + maisVelho.getNome() + " é o mais velho e tem " + maisVelho.getIdade() + " anos");
-    }
+        System.out.println("c)");
+        Guerreiro maisVelho = encontrarMaisVelho(lado1, lado2);
+        if (maisVelho != null) {
+            System.out.println("O " + maisVelho.getTipo() + " " + maisVelho.getNome() + " é o mais velho e tem " + maisVelho.getIdade() + " anos");
+        }
 
-    Combate combate = new Combate(lado1, lado2);
-    combate.executarCombate();
+        Combate combate = new Combate(lado1, lado2);
+        combate.executarCombate();
 
-    ArrayList<ArrayList<Guerreiro>> ladoVencedor = combate.obterLadoVencedor();
+        ArrayList<ArrayList<Guerreiro>> ladoVencedor = combate.obterLadoVencedor();
 
-    System.out.println("d)");
-    if (ladoVencedor == null) {
-        System.out.println("Nao houve vencedor.");
-        return;
-    }
-
-    boolean lado1Venceu = (ladoVencedor == lado1);
-    String nomeVencedor = lado1Venceu ? "Jedi e Clones" : "Sith e Droides";
-    String nomePerdedor = lado1Venceu ? "Sith e Droides" : "Jedi e Clones";
-    ArrayList<ArrayList<Guerreiro>> ladoPerdedor = lado1Venceu ? lado2 : lado1;
-
-    System.out.println(nomeVencedor + " venceram.");
-
-    Guerreiro ultimoDerrotado = combate.obterUltimoDerrotadoDoLado(ladoPerdedor);
-
-    System.out.println("e)");
-    if (ultimoDerrotado != null) {
-        System.out.println("O " + descreverGuerreiro(ultimoDerrotado) + ", foi o último a ser derrotado no lado dos " + nomePerdedor);
-    }
-
-    System.out.println("f)");
-    if (ultimoDerrotado != null && ultimoDerrotado.getUltimoAtacante() != null) {
-        System.out.println("O " + descreverGuerreiro(ultimoDerrotado.getUltimoAtacante()) + ", desferiu o último ataque no " + descreverGuerreiro(ultimoDerrotado) + ".");
-    }
-}
-
-    //metodo estatico pq é da classe
-    //move o primeiro guerreiro para o final da fila
-    public static void rotacionarFila(ArrayList<Guerreiro> fila) {
-        //verificar se lista ta vazia, se tiver retorna antes de rotacionar
-        if (fila.isEmpty()) {
+        System.out.println("d)");
+        if (ladoVencedor == null) {
+            System.out.println("Nao houve vencedor.");
             return;
-        } else {
-            Guerreiro rotacao = fila.remove(0); //pega o primeiro da fila (indice 0)
-            fila.add(rotacao); //joga pro final (adicionando dnv)
+        }
+
+        boolean lado1Venceu = (ladoVencedor == lado1);
+        String nomeVencedor = lado1Venceu ? "Jedi e Clones" : "Sith e Droides";
+        String nomePerdedor = lado1Venceu ? "Sith e Droides" : "Jedi e Clones";
+        ArrayList<ArrayList<Guerreiro>> ladoPerdedor = lado1Venceu ? lado2 : lado1;
+
+        System.out.println(nomeVencedor + " venceram.");
+
+        Guerreiro ultimoDerrotado = combate.obterUltimoDerrotadoDoLado(ladoPerdedor);
+
+        System.out.println("e)");
+        if (ultimoDerrotado != null) {
+            System.out.println("O " + descreverGuerreiro(ultimoDerrotado) + ", foi o último a ser derrotado no lado dos " + nomePerdedor);
+        }
+
+        System.out.println("f)");
+        if (ultimoDerrotado != null && ultimoDerrotado.getUltimoAtacante() != null) {
+            System.out.println("O " + descreverGuerreiro(ultimoDerrotado.getUltimoAtacante()) + ", desferiu o último ataque no " + descreverGuerreiro(ultimoDerrotado) + ".");
         }
     }
 
-    //metodo estatico pq é da classe
-    //remove os guerreiros com energia menor ou igual a zero
-    public static void removerDerrotado(ArrayList<Guerreiro> fila) {
-        //verifico se a lista ta vazia
-        if (fila.isEmpty()) {
-            return;
-        } else {
-            for (int i = (fila.size() - 1); i >= 0; i--) { //percorrer a lista de tras pra frente pra nao pular nenhum guerreiro
-                //chamar o metodo estaDerrotado pra cada guerreiro da lista, se for true remove
-                Guerreiro temp = fila.get(i);
-                if (temp.estaDerrotado() == true) {
-                    fila.remove(i);
-                }
-            }
-        }
-    }
 
     //metodo estatico pq é da classe
     //cria um lado com quatro filas vazias e independentes
