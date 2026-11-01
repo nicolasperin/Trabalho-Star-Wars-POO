@@ -49,4 +49,11 @@ public class DroideDeBatalhaB2 extends Guerreiro {
             filaAliada.add(desc2);
         }
     }
+
+    @Override
+    public String getTipo() {
+        return ("Droide de Batalha B2");
+    }
+    
+    
 }

@@ -27,7 +27,7 @@ public class AcolitoSith extends Guerreiro {
             return;
         }
         Guerreiro alvo1 = filaAdversaria.get(0);
-        alvo1.receberDano(this.getDanoDeAtaque());
+        alvo1.receberDano(this.getDanoDeAtaque(), this);
         this.aplicarDanoVeneno();
         Combate.processarDerrotados(filaAdversaria);
 
@@ -40,11 +40,16 @@ public class AcolitoSith extends Guerreiro {
         if (!filaAdversaria.isEmpty()) {
             if (!filaAdversaria.get(filaAdversaria.size() - 1).estaDerrotado()) {
                 Guerreiro alvo2 = filaAdversaria.get(filaAdversaria.size() - 1);
-                alvo2.receberDano(this.getDanoDeAtaque());
+                alvo2.receberDano(this.getDanoDeAtaque(), this);
                 this.aplicarDanoVeneno();
             }
         }
 
+    }
+
+    @Override
+    public String getTipo() {
+        return ("Acolito Sith");
     }
 
 }

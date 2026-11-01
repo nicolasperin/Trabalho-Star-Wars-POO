@@ -29,8 +29,15 @@ public class DroideAranha extends Guerreiro{
         
         for (int i = 0; i < filaAdversaria.size(); i++){
             Guerreiro alvo = filaAdversaria.get(i);
-            alvo.receberDano(this.getDanoDeAtaque());     
+            alvo.receberDano(this.getDanoDeAtaque(), this);     
         }
         this.aplicarDanoVeneno();
     }
+
+    @Override
+    public String getTipo() {
+        return ("Droide Aranha");
+    }
+    
+    
 }

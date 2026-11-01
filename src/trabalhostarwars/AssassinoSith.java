@@ -23,9 +23,14 @@ public class AssassinoSith extends Guerreiro {
         }
         
         Guerreiro alvo = filaAdversaria.get(0);
-        alvo.receberDano(this.getDanoDeAtaque());
+        alvo.receberDano(this.getDanoDeAtaque(), this);
         alvo.envenenar();
         this.aplicarDanoVeneno();
+    }
+
+    @Override
+    public String getTipo() {
+        return ("Assassino Sith");
     }
     
 }

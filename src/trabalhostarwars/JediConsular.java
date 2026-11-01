@@ -30,7 +30,7 @@ public class JediConsular extends Guerreiro{
         if(alvo.estaDerrotado()){
             return(false);
         }else{
-            alvo.receberDano(dano);
+            alvo.receberDano(dano, this);
             return(true);
         }
     }
@@ -76,9 +76,11 @@ public class JediConsular extends Guerreiro{
             this.aplicarDanoVeneno();
         }
     }
-    
+
     @Override
-    public String toString(){
-        return("Jedi Consular: " + super.toString());
+    public String getTipo() {
+        return ("Jedi Consular");
     }
+    
+    
 }

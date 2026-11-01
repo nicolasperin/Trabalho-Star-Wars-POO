@@ -37,12 +37,13 @@ public class CloneComando extends Guerreiro{
             return;
         }
         
-        alvo.receberDano(dano); 
+        alvo.receberDano(dano, this); 
         this.aplicarDanoVeneno();
     }
-    
+
     @Override
-    public String toString(){
-        return("Clone Comando: " + super.toString());
+    public String getTipo() {
+        return ("Clone Comando");
     }
+    
 }

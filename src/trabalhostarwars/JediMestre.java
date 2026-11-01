@@ -52,9 +52,10 @@ public class JediMestre extends Guerreiro{
             empurrarAlvo(alvo, filaAdversaria);
         }
     }
-    
+
     @Override
-    public String toString(){
-        return("Jedi Mestre: " + super.toString());
+    public String getTipo() {
+        return ("Jedi Mestre");
     }
+    
 }

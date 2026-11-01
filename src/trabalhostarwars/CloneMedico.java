@@ -26,7 +26,7 @@ public class CloneMedico extends Guerreiro{
         if(alvo.estaDerrotado()){
             return;
         }
-        alvo.receberDano(getDanoDeAtaque());
+        alvo.receberDano(getDanoDeAtaque(), this);
         
         //verificar se existe alguem depois do medioc, pq ai eu vou curar ele
         if(filaAliada.size() > 1){
@@ -37,9 +37,12 @@ public class CloneMedico extends Guerreiro{
         }
         this.aplicarDanoVeneno();
     }
-    
+
     @Override
-    public String toString(){
-        return("Clone Medico: " + super.toString());
+    public String getTipo() {
+        return ("Clone Médico");
+
     }
+    
+
 }

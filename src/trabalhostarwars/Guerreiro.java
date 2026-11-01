@@ -52,6 +52,14 @@ public abstract class Guerreiro {
         this.energia = (this.energia - dano);
     }
 
+    public void receberDano(double dano, Guerreiro atacante) {
+        if (dano <= 0) {
+            return;
+        }
+        this.ultimoAtacante = atacante;
+        this.receberDano(dano);
+    }
+
     //metodo de recuperar energia, onde receber a do objeto e acrescenta mais a quantidade
     public void recuperarEnergia(double qtdEnergiaRecuperar) {
         if (this.estaDerrotado() || qtdEnergiaRecuperar <= 0) {
@@ -85,6 +93,16 @@ public abstract class Guerreiro {
 
     public abstract double getDanoDeAtaque();
 
+    public abstract String getTipo();
+
+//mostra o peso sem ".0" quando for inteiro (70.0 vira 70)
+    public static String formatarPeso(double peso) {
+        if (peso == Math.floor(peso)) {
+            return String.valueOf((long) peso);
+        }
+        return String.valueOf(peso);
+    }
+
     //Metodo de ataque que vai receber o guerreiro alvo que vai sofrer ataque
     public void atacar(ArrayList<Guerreiro> filaAdversaria, ArrayList<Guerreiro> filaAliada) {
         if (this.estaDerrotado() || filaAdversaria.isEmpty()) {
@@ -95,13 +113,14 @@ public abstract class Guerreiro {
         if (alvo.estaDerrotado()) {
             return;
         }
-        alvo.receberDano(this.getDanoDeAtaque());
+        alvo.receberDano(this.getDanoDeAtaque(), this);
         this.aplicarDanoVeneno();
     }
 
     //APRESENTAR DADOS DOS GUERREIROS
     @Override
+
     public String toString() {
-        return (nome + ", " + idade + " anos, " + peso + " quilos");
+        return (getTipo() + ": " + nome + ", " + idade + " anos, " + formatarPeso(peso) + " kilos");
     }
 }

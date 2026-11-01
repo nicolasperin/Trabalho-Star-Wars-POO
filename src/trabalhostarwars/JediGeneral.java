@@ -29,7 +29,7 @@ public class JediGeneral extends Guerreiro{
             return;
         }
         
-        alvo.receberDano(getDanoDeAtaque());
+        alvo.receberDano(getDanoDeAtaque(), this);
         if(alvo.estaDerrotado()){
             inimigosDerrotados++;
             this.recuperarEnergia(20);
@@ -45,9 +45,11 @@ public class JediGeneral extends Guerreiro{
         double qtdRecuperar = Math.min(qtdEnergiaRecuperar, qtdQueFaltaParaMax);
         super.recuperarEnergia(qtdRecuperar);
     }
-    
+
     @Override
-    public String toString(){
-        return("Jedi General: " + super.toString());
+    public String getTipo() {
+        return ("Jedi General");
     }
+    
+    
 }

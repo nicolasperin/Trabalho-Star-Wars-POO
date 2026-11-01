@@ -1,91 +1,187 @@
 package trabalhostarwars;
 
 import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class TrabalhoStarWars {
 
-    public static void main(String[] args) {
-        {
-            // Primeiro golpe elimina o único adversário comum
-            {
-                ArrayList<ArrayList<Guerreiro>> atacantes = criarLadoArena();
-                ArrayList<ArrayList<Guerreiro>> adversarios = criarLadoArena();
+    //metodo estatico pq é da classe
+//cria o guerreiro do lado 1 conforme o tipo lido no arquivo
+    public static Guerreiro criarGuerreiroLado1(int tipo, String nome, int idade, double peso) {
+        return switch (tipo) {
+            case 1 ->
+                new JediMestre(nome, idade, peso);
+            case 2 ->
+                new JediConsular(nome, idade, peso);
+            case 3 ->
+                new JediGeneral(nome, idade, peso);
+            case 4 ->
+                new CloneMedico(nome, idade, peso);
+            case 5 ->
+                new CloneComando(nome, idade, peso);
+            case 6 ->
+                new ClonePesado(nome, idade, peso);
+            default ->
+                null;
+        };
+    }
 
-                Guerreiro acolito = new AcolitoSith("Acolito", 20, 70);
-                Guerreiro alvo = new AssassinoSith("Alvo", 25, 65);
+//cria o guerreiro do lado 2 conforme o tipo lido no arquivo
+    public static Guerreiro criarGuerreiroLado2(int tipo, String nome, int idade, double peso) {
+        return switch (tipo) {
+            case 1 ->
+                new DroideDeBatalhaB2(nome, idade, peso);
+            case 2 ->
+                new DroideAranha(nome, idade, peso);
+            case 3 ->
+                new DroideExterminador(nome, idade, peso);
+            case 4 ->
+                new AcolitoSith(nome, idade, peso);
+            case 5 ->
+                new AssassinoSith(nome, idade, peso);
+            case 6 ->
+                new LordeSith(nome, idade, peso);
+            default ->
+                null;
+        };
+    }
 
-                alvo.receberDano(85); // Fica com 15
-                acolito.envenenar();
+    //metodo estatico pq é da classe
+//le um arquivo e preenche a fila; lado define qual fabrica usar (1 ou 2)
+    public static void lerFila(String caminho, int lado, ArrayList<Guerreiro> fila) {
+        try (BufferedReader leitor = new BufferedReader(new FileReader(caminho))) {
+            String linha;
+            int numeroDaLinha = 0;
 
-                atacantes.get(0).add(acolito);
-                adversarios.get(0).add(alvo);
+            while ((linha = leitor.readLine()) != null) {
+                numeroDaLinha++;
+                linha = linha.trim();
 
-                Combate combate = new Combate(atacantes, adversarios);
-                combate.executarAtaques(atacantes, adversarios, true);
+                if (linha.isEmpty()) {
+                    continue;
+                }
 
-                System.out.println("=== ALVO COMUM ===");
-                System.out.println("Energia do alvo: " + alvo.getEnergia());
-                System.out.println("Energia do acolito: " + acolito.getEnergia());
-                System.out.println("Quantidade de adversarios: " + adversarios.get(0).size());
+                String[] partes = linha.split("\\s+");
+                if (partes.length != 4) {
+                    System.out.println("Linha " + numeroDaLinha + " invalida em " + caminho);
+                    continue;
+                }
+
+                try {
+                    int tipo = Integer.parseInt(partes[0]);
+                    String nome = partes[1];
+                    int idade = Integer.parseInt(partes[2]);
+                    double peso = Double.parseDouble(partes[3].replace(',', '.'));
+
+                    Guerreiro novo;
+                    if (lado == 1) {
+                        novo = criarGuerreiroLado1(tipo, nome, idade, peso);
+                    } else {
+                        novo = criarGuerreiroLado2(tipo, nome, idade, peso);
+                    }
+
+                    if (novo == null) {
+                        System.out.println("Tipo " + tipo + " invalido na linha " + numeroDaLinha + " de " + caminho);
+                    } else {
+                        fila.add(novo);
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Numero invalido na linha " + numeroDaLinha + " de " + caminho);
+                }
             }
+        } catch (IOException e) {
+            System.out.println("Nao foi possivel ler o arquivo " + caminho);
+        }
+    }
 
-            // Primeiro golpe elimina o B2; o segundo atinge o último descendente
-            {
-                ArrayList<ArrayList<Guerreiro>> atacantes = criarLadoArena();
-                ArrayList<ArrayList<Guerreiro>> adversarios = criarLadoArena();
+//le as 4 filas de um lado (fila11..fila14 ou fila21..fila24)
+    public static ArrayList<ArrayList<Guerreiro>> lerLado(int lado) {
+        ArrayList<ArrayList<Guerreiro>> ladoArena = criarLadoArena();
 
-                Guerreiro acolito = new AcolitoSith("Acolito", 20, 70);
-                Guerreiro b2 = new DroideDeBatalhaB2("B2", 15, 100);
+        for (int i = 0; i < 4; i++) {
+            lerFila("fila" + lado + (i + 1) + ".txt", lado, ladoArena.get(i));
+        }
+        return (ladoArena);
+    }
 
-                b2.receberDano(85); // Fica com 15
+    //C) devolve o guerreiro mais velho dos dois lados (empate: o primeiro encontrado)
+    public static Guerreiro encontrarMaisVelho(ArrayList<ArrayList<Guerreiro>> lado1, ArrayList<ArrayList<Guerreiro>> lado2) {
+        Guerreiro maisVelho = maisVelhoDoLado(lado1, null);
+        maisVelho = maisVelhoDoLado(lado2, maisVelho);
+        return (maisVelho);
+    }
 
-                atacantes.get(0).add(acolito);
-                adversarios.get(0).add(b2);
-
-                Combate combate = new Combate(atacantes, adversarios);
-                combate.executarAtaques(atacantes, adversarios, true);
-
-                System.out.println("\n=== B2 ===");
-                System.out.println("Energia do B2 original: " + b2.getEnergia());
-                System.out.println("Quantidade de adversarios: " + adversarios.get(0).size());
-
-                for (Guerreiro guerreiro : adversarios.get(0)) {
-                    System.out.println(
-                            guerreiro.getNome() + " - Energia: " + guerreiro.getEnergia()
-                    );
+    private static Guerreiro maisVelhoDoLado(ArrayList<ArrayList<Guerreiro>> lado, Guerreiro maisVelhoAtual) {
+        for (int i = 0; i < lado.size(); i++) {
+            for (int j = 0; j < lado.get(i).size(); j++) {
+                Guerreiro temp = lado.get(i).get(j);
+                if (maisVelhoAtual == null || temp.getIdade() > maisVelhoAtual.getIdade()) {
+                    maisVelhoAtual = temp;
                 }
             }
         }
-        /*
-        
-        //guerreiros temporarios para teste
-        Guerreiro Luke = new JediMestre("Luke", 25, 75.5);
-        Guerreiro Judi = new JediMestre("Judi", 75, 50.62);
-        Guerreiro Mupe = new CloneMedico("Mupe", 46, 62);
-        Guerreiro Puti = new CloneMedico("Puti", 12, 43.0);
-           
-        //cria os dois lados com quatro filas cada
-        ArrayList<ArrayList<Guerreiro>> lado1 = criarLadoArena();
-        ArrayList<ArrayList<Guerreiro>> lado2 = criarLadoArena();
-        
-        //distribui os guerreiros nas filas do lado 1
-        lado1.get(0).add(Luke);
-        lado1.get(1).add(Judi);
-        lado1.get(2).add(Mupe);
-        lado1.get(0).add(Puti);
-
-        //MOSTRAR OS DOIS LADOS DA ARENA
-        System.out.println("LADO 1 - Jedi e Clones");
-        exibirLadoArena(lado1);
-        System.out.println("LADO 2 - Sith e Droides");
-        exibirLadoArena(lado2);
-        
-        //MOSTRAR O MAIOR PESO DOS LADOS
-        System.out.println("B)");
-        System.out.println("Jedi e Clones pesam " + somarPesosDoLado(lado1) + " quilos.");
-        System.out.println("Sith e Droides pesam " + somarPesosDoLado(lado2) + " quilos.");
-         */
+        return (maisVelhoAtual);
     }
+
+//monta o trecho "Acólito Sith Anu, de 40 anos e 50 kilos"
+    public static String descreverGuerreiro(Guerreiro g) {
+        return (g.getTipo() + " " + g.getNome() + ", de " + g.getIdade() + " anos e " + Guerreiro.formatarPeso(g.getPeso()) + " kilos");
+    }
+
+   public static void main(String[] args) {
+
+    ArrayList<ArrayList<Guerreiro>> lado1 = lerLado(1);
+    ArrayList<ArrayList<Guerreiro>> lado2 = lerLado(2);
+
+    //a, b e c usam o estado inicial, entao vem antes do combate
+    System.out.println("a)");
+    System.out.println("LADO 1:");
+    exibirLadoArena(lado1);
+    System.out.println("LADO 2:");
+    exibirLadoArena(lado2);
+
+    System.out.println("b)");
+    System.out.println("Jedi e Clones pesam " + Guerreiro.formatarPeso(somarPesosDoLado(lado1)) + " kilos");
+    System.out.println("Sith e Droides pesam " + Guerreiro.formatarPeso(somarPesosDoLado(lado2)) + " kilos");
+
+    System.out.println("c)");
+    Guerreiro maisVelho = encontrarMaisVelho(lado1, lado2);
+    if (maisVelho != null) {
+        System.out.println("O " + maisVelho.getTipo() + " " + maisVelho.getNome() + " é o mais velho e tem " + maisVelho.getIdade() + " anos");
+    }
+
+    Combate combate = new Combate(lado1, lado2);
+    combate.executarCombate();
+
+    ArrayList<ArrayList<Guerreiro>> ladoVencedor = combate.obterLadoVencedor();
+
+    System.out.println("d)");
+    if (ladoVencedor == null) {
+        System.out.println("Nao houve vencedor.");
+        return;
+    }
+
+    boolean lado1Venceu = (ladoVencedor == lado1);
+    String nomeVencedor = lado1Venceu ? "Jedi e Clones" : "Sith e Droides";
+    String nomePerdedor = lado1Venceu ? "Sith e Droides" : "Jedi e Clones";
+    ArrayList<ArrayList<Guerreiro>> ladoPerdedor = lado1Venceu ? lado2 : lado1;
+
+    System.out.println(nomeVencedor + " venceram.");
+
+    Guerreiro ultimoDerrotado = combate.obterUltimoDerrotadoDoLado(ladoPerdedor);
+
+    System.out.println("e)");
+    if (ultimoDerrotado != null) {
+        System.out.println("O " + descreverGuerreiro(ultimoDerrotado) + ", foi o último a ser derrotado no lado dos " + nomePerdedor);
+    }
+
+    System.out.println("f)");
+    if (ultimoDerrotado != null && ultimoDerrotado.getUltimoAtacante() != null) {
+        System.out.println("O " + descreverGuerreiro(ultimoDerrotado.getUltimoAtacante()) + ", desferiu o último ataque no " + descreverGuerreiro(ultimoDerrotado) + ".");
+    }
+}
 
     //metodo estatico pq é da classe
     //move o primeiro guerreiro para o final da fila

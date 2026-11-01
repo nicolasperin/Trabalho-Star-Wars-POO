@@ -12,9 +12,11 @@ public class ClonePesado extends Guerreiro{
     public double getDanoDeAtaque(){
         return(30);
     }
-    
+
     @Override
-    public String toString(){
-        return("Clone Pesado: " + super.toString());
+    public String getTipo() {
+        return ("Clone Pesado");
     }
+    
+
 }

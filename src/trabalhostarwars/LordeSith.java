@@ -38,7 +38,7 @@ public class LordeSith extends Guerreiro {
         if (alvo.estaDerrotado()) {
             return;
         }
-        alvo.receberDano(this.getDanoDeAtaque());
+        alvo.receberDano(this.getDanoDeAtaque(), this);
 
         if (alvo.estaDerrotado()) {
             Guerreiro espectro = new EspectroSith(alvo.getNome(), alvo.getIdade(), alvo.getPeso());
@@ -49,4 +49,8 @@ public class LordeSith extends Guerreiro {
 
     }
 
+    @Override
+    public String getTipo() {
+        return ("Lorde Sith");
+    }
 }
